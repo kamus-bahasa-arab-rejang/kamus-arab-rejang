@@ -1,0 +1,753 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Kamus Digital Arab–Rejang–Indonesia</title>
+<link href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700;800;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --hijau: #2d7a4f;
+    --hijau-muda: #4caf50;
+    --hijau-terang: #e8f5e9;
+    --kuning: #f9a825;
+    --kuning-muda: #fff9c4;
+    --merah: #e53935;
+    --merah-muda: #ffebee;
+    --biru: #1565c0;
+    --biru-muda: #e3f2fd;
+    --ungu: #6a1b9a;
+    --ungu-muda: #f3e5f5;
+    --emas: #ff8f00;
+    --putih: #ffffff;
+    --abu: #f5f5f5;
+    --teks: #212121;
+    --teks-abu: #757575;
+    --shadow: 0 4px 16px rgba(0,0,0,0.10);
+    --radius: 16px;
+    --radius-sm: 10px;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Nunito', sans-serif;
+    background: linear-gradient(135deg, #e8f5e9 0%, #fff9c4 50%, #e3f2fd 100%);
+    min-height: 100vh;
+    color: var(--teks);
+  }
+
+  /* ===== HEADER ===== */
+  header {
+    background: linear-gradient(90deg, #1b5e20 0%, #2e7d32 40%, #1565c0 100%);
+    color: white;
+    padding: 0;
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+  }
+
+  .header-top {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 24px 10px;
+  }
+
+  .logo-circle {
+    width: 52px; height: 52px;
+    background: linear-gradient(135deg, #f9a825, #ff6f00);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 26px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+    flex-shrink: 0;
+  }
+
+  .header-title h1 {
+    font-size: 1.35rem;
+    font-weight: 900;
+    letter-spacing: 0.3px;
+    line-height: 1.1;
+  }
+
+  .header-title p {
+    font-size: 0.72rem;
+    opacity: 0.85;
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .lang-flags {
+    margin-left: auto;
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .flag-badge {
+    background: rgba(255,255,255,0.18);
+    border: 1.5px solid rgba(255,255,255,0.35);
+    border-radius: 20px;
+    padding: 4px 10px;
+    font-size: 0.68rem;
+    font-weight: 700;
+    letter-spacing: 0.3px;
+  }
+
+  /* ===== SEARCH SECTION ===== */
+  .search-section {
+    background: rgba(255,255,255,0.92);
+    padding: 14px 24px;
+    border-bottom: 2px solid rgba(46,125,50,0.15);
+  }
+
+  .search-box-wrap {
+    position: relative;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.4rem;
+    color: var(--hijau);
+  }
+
+  #searchInput {
+    width: 100%;
+    padding: 14px 50px 14px 52px;
+    font-size: 1.05rem;
+    font-family: 'Nunito', sans-serif;
+    font-weight: 700;
+    border: 2.5px solid var(--hijau-muda);
+    border-radius: 50px;
+    outline: none;
+    background: #fff;
+    color: var(--teks);
+    transition: border 0.2s, box-shadow 0.2s;
+    box-shadow: 0 2px 10px rgba(46,125,50,0.1);
+  }
+
+  #searchInput:focus {
+    border-color: var(--hijau);
+    box-shadow: 0 2px 16px rgba(46,125,50,0.2);
+  }
+
+  #searchInput::placeholder { color: #aaa; font-weight: 600; }
+
+  .clear-btn {
+    position: absolute;
+    right: 16px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: var(--abu);
+    border: none;
+    border-radius: 50%;
+    width: 28px; height: 28px;
+    font-size: 1rem;
+    cursor: pointer;
+    display: none;
+    align-items: center;
+    justify-content: center;
+    color: #999;
+    transition: background 0.2s;
+  }
+
+  .clear-btn:hover { background: #ddd; color: #555; }
+  .clear-btn.show { display: flex; }
+
+  .search-hint {
+    text-align: center;
+    margin-top: 8px;
+    font-size: 0.78rem;
+    color: var(--teks-abu);
+    font-weight: 600;
+  }
+
+  /* ===== CATEGORY TABS ===== */
+  .category-section {
+    padding: 14px 20px 0;
+    max-width: 860px;
+    margin: 0 auto;
+  }
+
+  .category-label {
+    font-size: 0.75rem;
+    font-weight: 800;
+    color: var(--hijau);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 8px;
+  }
+
+  .cat-tabs {
+    display: flex;
+    gap: 8px;
+    flex-wrap: wrap;
+  }
+
+  .cat-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 8px 16px;
+    border-radius: 50px;
+    border: 2px solid transparent;
+    font-family: 'Nunito', sans-serif;
+    font-size: 0.85rem;
+    font-weight: 800;
+    cursor: pointer;
+    transition: all 0.18s;
+    background: white;
+    color: #555;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+  }
+
+  .cat-tab .tab-icon { font-size: 1.1rem; }
+
+  .cat-tab.active, .cat-tab:hover {
+    color: white;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+  }
+
+  .cat-tab[data-cat="semua"].active, .cat-tab[data-cat="semua"]:hover { background: linear-gradient(135deg, #1b5e20, #388e3c); border-color: #1b5e20; }
+  .cat-tab[data-cat="bahasa"].active, .cat-tab[data-cat="bahasa"]:hover { background: linear-gradient(135deg, #1565c0, #1976d2); border-color: #1565c0; }
+  .cat-tab[data-cat="kesenian"].active, .cat-tab[data-cat="kesenian"]:hover { background: linear-gradient(135deg, #6a1b9a, #8e24aa); border-color: #6a1b9a; }
+  .cat-tab[data-cat="adat"].active, .cat-tab[data-cat="adat"]:hover { background: linear-gradient(135deg, #e65100, #f57c00); border-color: #e65100; }
+  .cat-tab[data-cat="kearifan"].active, .cat-tab[data-cat="kearifan"]:hover { background: linear-gradient(135deg, #00695c, #00897b); border-color: #00695c; }
+
+  /* ===== MAIN CONTENT ===== */
+  .main-content {
+    max-width: 860px;
+    margin: 0 auto;
+    padding: 18px 20px 40px;
+  }
+
+  .result-info {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--teks-abu);
+    margin-bottom: 14px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+
+  .result-count {
+    background: var(--hijau);
+    color: white;
+    border-radius: 20px;
+    padding: 2px 10px;
+    font-size: 0.78rem;
+    font-weight: 800;
+  }
+
+  /* ===== KOSAKATA CARD ===== */
+  .vocab-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+    gap: 16px;
+  }
+
+  .vocab-card {
+    background: white;
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+    transition: transform 0.18s, box-shadow 0.18s;
+    cursor: pointer;
+    border: 2px solid transparent;
+    position: relative;
+  }
+
+  .vocab-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+  }
+
+  .card-header {
+    padding: 14px 16px 10px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .cat-badge {
+    font-size: 0.65rem;
+    font-weight: 800;
+    padding: 3px 9px;
+    border-radius: 20px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+
+  .cat-badge.bahasa { background: #e3f2fd; color: #1565c0; }
+  .cat-badge.kesenian { background: #f3e5f5; color: #6a1b9a; }
+  .cat-badge.adat { background: #fff3e0; color: #e65100; }
+  .cat-badge.kearifan { background: #e0f2f1; color: #00695c; }
+
+  .card-emoji { font-size: 1.8rem; margin-left: auto; }
+
+  .card-body { padding: 4px 16px 16px; }
+
+  .arabic-word {
+    font-family: 'Amiri', serif;
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--hijau);
+    text-align: right;
+    direction: rtl;
+    line-height: 1.3;
+    margin-bottom: 4px;
+  }
+
+  .transliteration {
+    font-size: 0.78rem;
+    color: var(--teks-abu);
+    font-weight: 600;
+    font-style: italic;
+    text-align: right;
+    margin-bottom: 10px;
+  }
+
+  .lang-rows { display: flex; flex-direction: column; gap: 6px; }
+
+  .lang-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.88rem;
+  }
+
+  .lang-pill {
+    font-size: 0.62rem;
+    font-weight: 800;
+    padding: 2px 8px;
+    border-radius: 20px;
+    flex-shrink: 0;
+    letter-spacing: 0.3px;
+    min-width: 36px;
+    text-align: center;
+  }
+
+  .lang-pill.id { background: #e8f5e9; color: #2e7d32; }
+  .lang-pill.rj { background: #fff9c4; color: #f57f17; }
+
+  .lang-val { font-weight: 700; color: var(--teks); }
+
+  .card-divider {
+    height: 1px;
+    background: linear-gradient(90deg, transparent, #e0e0e0, transparent);
+    margin: 10px 0;
+  }
+
+  .contoh-label {
+    font-size: 0.68rem;
+    font-weight: 800;
+    color: var(--teks-abu);
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 4px;
+  }
+
+  .contoh-ar {
+    font-family: 'Amiri', serif;
+    font-size: 1rem;
+    color: var(--biru);
+    direction: rtl;
+    text-align: right;
+    line-height: 1.6;
+  }
+
+  .contoh-id {
+    font-size: 0.78rem;
+    color: var(--teks-abu);
+    font-style: italic;
+    margin-top: 2px;
+  }
+
+  /* ===== WARNA KATEGORI ===== */
+  .vocab-card.bahasa { border-top: 4px solid #1565c0; }
+  .vocab-card.kesenian { border-top: 4px solid #8e24aa; }
+  .vocab-card.adat { border-top: 4px solid #f57c00; }
+  .vocab-card.kearifan { border-top: 4px solid #00897b; }
+
+  /* ===== SEARCH RESULT HIGHLIGHT ===== */
+  mark {
+    background: #fff176;
+    color: var(--teks);
+    border-radius: 3px;
+    padding: 0 1px;
+  }
+
+  /* ===== EMPTY STATE ===== */
+  .empty-state {
+    text-align: center;
+    padding: 60px 20px;
+    display: none;
+  }
+
+  .empty-state .emoji { font-size: 4rem; margin-bottom: 12px; }
+  .empty-state h3 { font-size: 1.2rem; font-weight: 800; color: var(--teks); margin-bottom: 6px; }
+  .empty-state p { color: var(--teks-abu); font-size: 0.9rem; }
+
+  /* ===== HERO SECTION ===== */
+  .hero-banner {
+    background: linear-gradient(135deg, #1b5e20 0%, #2e7d32 50%, #1565c0 100%);
+    color: white;
+    border-radius: var(--radius);
+    padding: 22px 24px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    box-shadow: 0 6px 20px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero-banner::before {
+    content: '';
+    position: absolute;
+    right: -30px; top: -30px;
+    width: 160px; height: 160px;
+    background: rgba(255,255,255,0.06);
+    border-radius: 50%;
+  }
+
+  .hero-banner::after {
+    content: '';
+    position: absolute;
+    right: 60px; bottom: -40px;
+    width: 120px; height: 120px;
+    background: rgba(255,255,255,0.04);
+    border-radius: 50%;
+  }
+
+  .hero-text h2 { font-size: 1.1rem; font-weight: 900; margin-bottom: 4px; }
+  .hero-text p { font-size: 0.82rem; opacity: 0.88; font-weight: 600; line-height: 1.5; }
+
+  .hero-stats {
+    display: flex;
+    gap: 16px;
+    margin-left: auto;
+    flex-shrink: 0;
+  }
+
+  .stat-box {
+    text-align: center;
+    background: rgba(255,255,255,0.15);
+    border-radius: 12px;
+    padding: 10px 14px;
+    min-width: 70px;
+  }
+
+  .stat-num { font-size: 1.6rem; font-weight: 900; line-height: 1; }
+  .stat-lbl { font-size: 0.6rem; font-weight: 700; opacity: 0.8; text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* ===== FOOTER ===== */
+  footer {
+    background: #1b5e20;
+    color: rgba(255,255,255,0.85);
+    text-align: center;
+    padding: 20px;
+    font-size: 0.78rem;
+    font-weight: 600;
+    margin-top: 20px;
+  }
+
+  footer span { color: #f9a825; }
+
+  /* ===== RESPONSIVE ===== */
+  @media (max-width: 600px) {
+    .header-top { padding: 12px 16px 8px; }
+    .header-title h1 { font-size: 1.1rem; }
+    .lang-flags { display: none; }
+    .search-section { padding: 12px 16px; }
+    .category-section { padding: 12px 16px 0; }
+    .main-content { padding: 14px 16px 40px; }
+    .vocab-grid { grid-template-columns: 1fr; }
+    .hero-stats { display: none; }
+    .hero-banner { padding: 18px; }
+    .cat-tab { font-size: 0.78rem; padding: 7px 12px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HEADER -->
+<header>
+  <div class="header-top">
+    <div class="logo-circle">📖</div>
+    <div class="header-title">
+      <h1>Kamus Arab–Rejang–Indonesia</h1>
+      <p>Berbasis Kebudayaan Rejang Lebong · Bengkulu</p>
+    </div>
+    <div class="lang-flags">
+      <span class="flag-badge">🇸🇦 Arab</span>
+      <span class="flag-badge">🏔️ Rejang</span>
+      <span class="flag-badge">🇮🇩 Indonesia</span>
+    </div>
+  </div>
+
+  <!-- SEARCH -->
+  <div class="search-section">
+    <div class="search-box-wrap">
+      <span class="search-icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Cari kosakata dalam 3 bahasa..." autocomplete="off">
+      <button class="clear-btn" id="clearBtn" title="Hapus pencarian">✕</button>
+    </div>
+    <div class="search-hint">Ketik dalam Bahasa Arab, Rejang, atau Indonesia</div>
+  </div>
+</header>
+
+<!-- CATEGORY TABS -->
+<div class="category-section">
+  <div class="category-label">📂 Pilih Kategori</div>
+  <div class="cat-tabs">
+    <button class="cat-tab active" data-cat="semua"><span class="tab-icon">🌟</span> Semua</button>
+    <button class="cat-tab" data-cat="bahasa"><span class="tab-icon">📝</span> Bahasa</button>
+    <button class="cat-tab" data-cat="kesenian"><span class="tab-icon">🎨</span> Kesenian</button>
+    <button class="cat-tab" data-cat="adat"><span class="tab-icon">🏮</span> Adat-Istiadat</button>
+    <button class="cat-tab" data-cat="kearifan"><span class="tab-icon">🌿</span> Kearifan Lokal</button>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main-content">
+
+  <!-- HERO BANNER -->
+  <div class="hero-banner" id="heroBanner">
+    <div class="hero-text">
+      <h2>🌺 Selamat Belajar, Pelajar Hebat!</h2>
+      <p>Kamus ini membantu kamu belajar kosakata Bahasa Arab<br>melalui bahasa dan budaya Rejang Lebong yang kamu kenal.</p>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-box">
+        <div class="stat-num" id="totalKata">0</div>
+        <div class="stat-lbl">Kosakata</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">4</div>
+        <div class="stat-lbl">Kategori</div>
+      </div>
+      <div class="stat-box">
+        <div class="stat-num">3</div>
+        <div class="stat-lbl">Bahasa</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- RESULT INFO -->
+  <div class="result-info" id="resultInfo">
+    Menampilkan <span class="result-count" id="resultCount">0</span> kosakata
+  </div>
+
+  <!-- VOCAB GRID -->
+  <div class="vocab-grid" id="vocabGrid"></div>
+
+  <!-- EMPTY STATE -->
+  <div class="empty-state" id="emptyState">
+    <div class="emoji">🔎</div>
+    <h3>Kosakata tidak ditemukan</h3>
+    <p>Coba kata yang berbeda atau pilih kategori lain.</p>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div>🌺 Kamus Digital <span>Arab–Rejang–Indonesia</span> Berbasis Kebudayaan</div>
+  <div style="margin-top:4px;">Budaya Rejang Lebong · Bengkulu | Untuk Siswa SD Kelas IV</div>
+</footer>
+
+<script>
+const KOSAKATA = [
+  // ========== BAHASA ==========
+  { id:"b1", kategori:"bahasa", emoji:"1️⃣", arab:"وَاحِد", transliterasi:"waahid", indonesia:"angka satu", rejang:"do", contohAr:"وَاحِدٌ وَاحِد", contohId:"Satu itu waahid" },
+  { id:"b2", kategori:"bahasa", emoji:"2️⃣", arab:"اِثْنَان", transliterasi:"itsnaan", indonesia:"angka dua", rejang:"duai", contohAr:"عِنْدِي اِثْنَانِ كِتَابَانِ", contohId:"Aku punya dua buku" },
+  { id:"b3", kategori:"bahasa", emoji:"3️⃣", arab:"ثَلَاثَة", transliterasi:"tsalaatsah", indonesia:"angka tiga", rejang:"telau", contohAr:"ثَلَاثَةُ أَطْفَالٍ يَلْعَبُونَ", contohId:"Tiga anak sedang bermain" },
+  { id:"b4", kategori:"bahasa", emoji:"4️⃣", arab:"أَرْبَعَة", transliterasi:"arba'ah", indonesia:"angka empat", rejang:"pat", contohAr:"أَرْبَعَةُ أَيَّامٍ", contohId:"Empat hari" },
+  { id:"b5", kategori:"bahasa", emoji:"5️⃣", arab:"خَمْسَة", transliterasi:"khamsah", indonesia:"angka lima", rejang:"lemau", contohAr:"خَمْسَةُ طُلَّابٍ فِي الْفَصْلِ", contohId:"Lima murid di kelas" },
+  { id:"b6", kategori:"bahasa", emoji:"🏷️", arab:"اِسْم", transliterasi:"ism", indonesia:"nama", rejang:"ngau", contohAr:"مَا اسْمُكَ؟", contohId:"Siapa namamu?" },
+  { id:"b7", kategori:"bahasa", emoji:"📝", arab:"كَلِمَة", transliterasi:"kalimah", indonesia:"kata", rejang:"kato", contohAr:"هَذِهِ كَلِمَةٌ جَمِيلَة", contohId:"Ini kata yang indah" },
+  { id:"b8", kategori:"bahasa", emoji:"📜", arab:"جُمْلَة", transliterasi:"jumlah", indonesia:"kalimat", rejang:"kalimat", contohAr:"اِقْرَأِ الْجُمْلَةَ بِصَوْتٍ عَالٍ", contohId:"Bacalah kalimat dengan suara keras" },
+  { id:"b9", kategori:"bahasa", emoji:"❓", arab:"سَأَلَ", transliterasi:"sa-ala", indonesia:"bertanya", rejang:"tunyau", contohAr:"سَأَلَ الطَّالِبُ الْمُعَلِّمَ", contohId:"Murid bertanya kepada guru" },
+  { id:"b10", kategori:"bahasa", emoji:"✅", arab:"أَجَابَ", transliterasi:"ajaaba", indonesia:"menjawab", rejang:"semek", contohAr:"أَجَابَتْ بِصَوْتٍ وَاضِح", contohId:"Ia menjawab dengan suara jelas" },
+  { id:"b11", kategori:"bahasa", emoji:"👦", arab:"وَلَد", transliterasi:"walad", indonesia:"anak laki-laki", rejang:"anok", contohAr:"هَذَا وَلَدٌ ذَكِيّ", contohId:"Ini anak laki-laki yang cerdas" },
+  { id:"b12", kategori:"bahasa", emoji:"👴", arab:"جَدّ", transliterasi:"jadd", indonesia:"kakek", rejang:"niniek", contohAr:"جَدِّي رَجُلٌ طَيِّب", contohId:"Kakekku orang yang baik" },
+  { id:"b13", kategori:"bahasa", emoji:"👵", arab:"جَدَّة", transliterasi:"jaddah", indonesia:"nenek", rejang:"sebei", contohAr:"جَدَّتِي تَطْبُخُ كُلَّ يَوْم", contohId:"Nenekku memasak setiap hari" },
+  { id:"b14", kategori:"bahasa", emoji:"👨", arab:"أَب", transliterasi:"ab", indonesia:"ayah", rejang:"bapok", contohAr:"أَبِي يَعْمَلُ فِي الْحَقْل", contohId:"Ayahku bekerja di ladang" },
+  { id:"b15", kategori:"bahasa", emoji:"👩", arab:"أُمّ", transliterasi:"umm", indonesia:"ibu", rejang:"indok", contohAr:"أُمِّي تُحِبُّنِي كَثِيراً", contohId:"Ibuku menyayangiku" },
+  { id:"b16", kategori:"bahasa", emoji:"🤝", arab:"صَدِيق", transliterasi:"shadiiq", indonesia:"teman/sahabat", rejang:"kunan", contohAr:"صَدِيقِي يُسَاعِدُنِي دَائِماً", contohId:"Temanku selalu membantuku" },
+  { id:"b17", kategori:"bahasa", emoji:"✍️", arab:"كَتَبَ", transliterasi:"kataba", indonesia:"menulis", rejang:"nulis", contohAr:"كَتَبَ التِّلْمِيذُ دَرْسَهُ", contohId:"Murid menulis pelajarannya" },
+  { id:"b18", kategori:"bahasa", emoji:"📖", arab:"قَرَأَ", transliterasi:"qara-a", indonesia:"membaca", rejang:"maco", contohAr:"قَرَأْتُ الْكِتَابَ أَمْسِ", contohId:"Aku membaca buku kemarin" },
+
+  // ========== KESENIAN ==========
+  { id:"k1", kategori:"kesenian", emoji:"🥁", arab:"دُفّ", transliterasi:"duff", indonesia:"rebana", rejang:"terbang", contohAr:"يَضْرِبُ الطِّفْلُ الدُّفَّ", contohId:"Anak itu memukul rebana" },
+  { id:"k2", kategori:"kesenian", emoji:"🎵", arab:"أُغْنِيَة", transliterasi:"ughniyah", indonesia:"lagu", rejang:"lagu", contohAr:"هَذِهِ أُغْنِيَةٌ جَمِيلَة", contohId:"Ini lagu yang indah" },
+  { id:"k3", kategori:"kesenian", emoji:"💃", arab:"رَقَصَ", transliterasi:"raqasha", indonesia:"menari", rejang:"ngedi", contohAr:"رَقَصَتِ الْبِنْتُ بِجَمَال", contohId:"Gadis itu menari dengan cantik" },
+  { id:"k4", kategori:"kesenian", emoji:"🎤", arab:"غَنَّى", transliterasi:"ghanna", indonesia:"bernyanyi", rejang:"besambei", contohAr:"غَنَّى الطُّلَّابُ مَعًا", contohId:"Para murid bernyanyi bersama" },
+  { id:"k5", kategori:"kesenian", emoji:"🎶", arab:"مُوسِيقَى", transliterasi:"muusiqa", indonesia:"musik", rejang:"klitang", contohAr:"أُحِبُّ سَمَاعَ الْمُوسِيقَى", contohId:"Aku suka mendengar musik" },
+  { id:"k6", kategori:"kesenian", emoji:"🎭", arab:"عَرْض", transliterasi:"ardh", indonesia:"pertunjukan", rejang:"peragaan", contohAr:"حَضَرْنَا عَرْضًا جَمِيلاً", contohId:"Kami menonton pertunjukan indah" },
+  { id:"k7", kategori:"kesenian", emoji:"🎸", arab:"عَازِف", transliterasi:"aaizif", indonesia:"pemain musik", rejang:"tukang ketipung", contohAr:"الْعَازِفُ مَاهِرٌ جِداً", contohId:"Pemain musiknya sangat mahir" },
+  { id:"k8", kategori:"kesenian", emoji:"🪘", arab:"طَبْل", transliterasi:"thabl", indonesia:"gendang/gamelan", rejang:"klitang", contohAr:"يُدَقُّ الطَّبْلُ فِي الْعِيد", contohId:"Gendang ditabuh saat perayaan" },
+  { id:"k9", kategori:"kesenian", emoji:"🪈", arab:"نَاي", transliterasi:"naay", indonesia:"suling bambu", rejang:"dekut", contohAr:"يَعْزِفُ الرَّجُلُ النَّايَ بِرَاحَة", contohId:"Lelaki itu memainkan suling dengan tenang" },
+  { id:"k10", kategori:"kesenian", emoji:"🏆", arab:"فَنّ", transliterasi:"fann", indonesia:"seni", rejang:"kejeui", contohAr:"الْفَنُّ جُزْءٌ مِنَ الثَّقَافَة", contohId:"Seni adalah bagian dari budaya" },
+
+  // ========== ADAT ISTIADAT ==========
+  { id:"a1", kategori:"adat", emoji:"🤲", arab:"دُعَاء", transliterasi:"du'aa'", indonesia:"doa", rejang:"do'a", contohAr:"اَللّهُمَّ اسْمَعْ دُعَائَنَا", contohId:"Ya Allah, dengarkan doa kami" },
+  { id:"a2", kategori:"adat", emoji:"🎉", arab:"وَلِيمَة", transliterasi:"waliimah", indonesia:"selamatan", rejang:"selamatan", contohAr:"أَقَمْنَا وَلِيمَةً كَبِيرَة", contohId:"Kami mengadakan selamatan besar" },
+  { id:"a3", kategori:"adat", emoji:"✂️", arab:"خِتَان", transliterasi:"khitaan", indonesia:"khitanan/sunatan", rejang:"semluweng", contohAr:"أُقِيمَ الْخِتَانُ بِفَرَح", contohId:"Sunatan dirayakan dengan gembira" },
+  { id:"a4", kategori:"adat", emoji:"💍", arab:"زَوَاج", transliterasi:"zawaaj", indonesia:"perkawinan", rejang:"bimbang", contohAr:"الزَّوَاجُ سُنَّةٌ مُبَارَكَة", contohId:"Perkawinan adalah sunah yang berkah" },
+  { id:"a5", kategori:"adat", emoji:"🙏", arab:"عَفْو", transliterasi:"afw", indonesia:"maaf", rejang:"ampun", contohAr:"أَطْلُبُ الْعَفْوَ مِنْكَ", contohId:"Aku meminta maafmu" },
+  { id:"a6", kategori:"adat", emoji:"❤️", arab:"صِلَةُ الرَّحِم", transliterasi:"shilatur rahim", indonesia:"silaturahmi", rejang:"silaturahmi", contohAr:"صِلَةُ الرَّحِمِ تُطِيلُ الْعُمْر", contohId:"Silaturahmi memanjangkan umur" },
+  { id:"a7", kategori:"adat", emoji:"🌸", arab:"عِيد", transliterasi:"'iid", indonesia:"perayaan", rejang:"bekejei", contohAr:"نَحْتَفِلُ بِالْعِيدِ مَعَ الْأَسْرَة", contohId:"Kami merayakan hari raya bersama keluarga" },
+  { id:"a8", kategori:"adat", emoji:"💒", arab:"نِكَاح", transliterasi:"nikaah", indonesia:"upacara pernikahan", rejang:"bimbang", contohAr:"حَفِلَةُ النِّكَاحِ كَانَتْ جَمِيلَة", contohId:"Upacara pernikahan itu sangat indah" },
+  { id:"a9", kategori:"adat", emoji:"🏠", arab:"مَنْزِل جَدِيد", transliterasi:"manzil jadiid", indonesia:"rumah baru", rejang:"kembu'", contohAr:"دَخَلْنَا الْمَنْزِلَ الْجَدِيدَ بِسَلَامَة", contohId:"Kami masuki rumah baru dengan selamat" },
+  { id:"a10", kategori:"adat", emoji:"🤝", arab:"تَعَاوُن", transliterasi:"ta'aawun", indonesia:"gotong royong", rejang:"umbung", contohAr:"التَّعَاوُنُ قِيمَةٌ جَمِيلَة", contohId:"Gotong royong adalah nilai yang indah" },
+  { id:"a11", kategori:"adat", emoji:"⚖️", arab:"حُكْم", transliterasi:"hukm", indonesia:"aturan adat", rejang:"ca'o", contohAr:"الْحُكْمُ الْعَادِلُ يَجْلِبُ السَّلَام", contohId:"Aturan yang adil membawa kedamaian" },
+  { id:"a12", kategori:"adat", emoji:"🕊️", arab:"صُلْح", transliterasi:"shulh", indonesia:"ritual perdamaian", rejang:"tepung setawar", contohAr:"الصُّلْحُ خَيْرٌ مِنَ الشِّقَاق", contohId:"Damai lebih baik dari perselisihan" },
+
+  // ========== KEARIFAN LOKAL ==========
+  { id:"kl1", kategori:"kearifan", emoji:"🌾", arab:"أَرُزّ", transliterasi:"aruzz", indonesia:"padi", rejang:"pai", contohAr:"يَزْرَعُ الْفَلَّاحُ الْأَرُزَّ", contohId:"Petani menanam padi" },
+  { id:"kl2", kategori:"kearifan", emoji:"🏔️", arab:"حَقْل", transliterasi:"haql", indonesia:"sawah", rejang:"sawah", contohAr:"الْحَقْلُ وَاسِعٌ وَأَخْضَر", contohId:"Sawahnya luas dan hijau" },
+  { id:"kl3", kategori:"kearifan", emoji:"🌿", arab:"مَزْرَعَة", transliterasi:"mazra'ah", indonesia:"ladang", rejang:"uma", contohAr:"لَدَيْنَا مَزْرَعَةٌ كَبِيرَة", contohId:"Kami punya ladang yang luas" },
+  { id:"kl4", kategori:"kearifan", emoji:"🌧️", arab:"مَطَر", transliterasi:"mathar", indonesia:"hujan", rejang:"udan", contohAr:"يَنْزِلُ الْمَطَرُ فِي الْمَسَاء", contohId:"Hujan turun di sore hari" },
+  { id:"kl5", kategori:"kearifan", emoji:"☀️", arab:"حَارّ", transliterasi:"haarr", indonesia:"panas", rejang:"pano", contohAr:"الطَّقْسُ حَارٌّ الْيَوْمَ", contohId:"Cuaca hari ini panas" },
+  { id:"kl6", kategori:"kearifan", emoji:"❄️", arab:"بَارِد", transliterasi:"baarid", indonesia:"dingin", rejang:"dingin", contohAr:"الطَّقْسُ بَارِدٌ فِي الصَّبَاح", contohId:"Cuaca dingin di pagi hari" },
+  { id:"kl7", kategori:"kearifan", emoji:"💨", arab:"رِيح", transliterasi:"riih", indonesia:"angin", rejang:"angin", contohAr:"تَهُبُّ الرِّيحُ بِلُطْف", contohId:"Angin berhembus dengan lembut" },
+  { id:"kl8", kategori:"kearifan", emoji:"🔥", arab:"نَار", transliterasi:"naar", indonesia:"api", rejang:"apui", contohAr:"النَّارُ سَاخِنَةٌ جِداً", contohId:"Api sangat panas" },
+  { id:"kl9", kategori:"kearifan", emoji:"💧", arab:"مَاء", transliterasi:"maa'", indonesia:"air/sungai", rejang:"bioa", contohAr:"الْمَاءُ نِعْمَةٌ مِنَ اللَّه", contohId:"Air adalah nikmat dari Allah" },
+  { id:"kl10", kategori:"kearifan", emoji:"🌍", arab:"أَرْض", transliterasi:"ardh", indonesia:"tanah", rejang:"taneak", contohAr:"الْأَرْضُ مِلْكٌ لِلَّه", contohId:"Tanah adalah milik Allah" },
+  { id:"kl11", kategori:"kearifan", emoji:"🪨", arab:"حَجَر", transliterasi:"hajar", indonesia:"batu", rejang:"batu", contohAr:"وَجَدْتُ حَجَرًا كَبِيرًا", contohId:"Aku menemukan batu besar" },
+  { id:"kl12", kategori:"kearifan", emoji:"🌳", arab:"شَجَرَة", transliterasi:"shajarah", indonesia:"pohon", rejang:"pohon", contohAr:"الشَّجَرَةُ تُعْطِينَا الظِّلَّ", contohId:"Pohon memberikan kita teduh" },
+  { id:"kl13", kategori:"kearifan", emoji:"🍎", arab:"فَاكِهَة", transliterasi:"faakihah", indonesia:"buah", rejang:"buah", contohAr:"الْفَاكِهَةُ لَذِيذَةٌ وَمُفِيدَة", contohId:"Buah itu lezat dan bermanfaat" },
+  { id:"kl14", kategori:"kearifan", emoji:"🥬", arab:"خُضَار", transliterasi:"khudhaar", indonesia:"sayur", rejang:"sayur", contohAr:"أُحِبُّ أَكْلَ الْخُضَار", contohId:"Aku suka makan sayur" },
+  { id:"kl15", kategori:"kearifan", emoji:"🍽️", arab:"أَكَلَ", transliterasi:"akala", indonesia:"makan", rejang:"makan", contohAr:"أَكَلْنَا الطَّعَامَ مَعًا", contohId:"Kami makan bersama-sama" },
+  { id:"kl16", kategori:"kearifan", emoji:"🥛", arab:"شَرِبَ", transliterasi:"syariba", indonesia:"minum", rejang:"minum", contohAr:"شَرِبَ الطِّفْلُ الْمَاءَ", contohId:"Anak itu minum air" },
+  { id:"kl17", kategori:"kearifan", emoji:"😴", arab:"نَامَ", transliterasi:"naama", indonesia:"tidur", rejang:"tido", contohAr:"نَامَ الطِّفْلُ مُبَكِّراً", contohId:"Anak itu tidur lebih awal" },
+  { id:"kl18", kategori:"kearifan", emoji:"⏰", arab:"قَامَ", transliterasi:"qaama", indonesia:"bangun", rejang:"bangun", contohAr:"قَامَ مِنَ النَّوْمِ فَجْراً", contohId:"Ia bangun saat fajar" },
+  { id:"kl19", kategori:"kearifan", emoji:"🎮", arab:"لَعِبَ", transliterasi:"la'iba", indonesia:"bermain", rejang:"bemain", contohAr:"لَعِبَ الْأَطْفَالُ فِي الْحَدِيقَة", contohId:"Anak-anak bermain di taman" },
+  { id:"kl20", kategori:"kearifan", emoji:"📚", arab:"دَرَسَ", transliterasi:"darasa", indonesia:"belajar", rejang:"belajar", contohAr:"دَرَسَ الطُّلَّابُ بِجِدِّيَّة", contohId:"Murid-murid belajar dengan serius" },
+  { id:"kl21", kategori:"kearifan", emoji:"🏫", arab:"مَدْرَسَة", transliterasi:"madrasah", indonesia:"sekolah", rejang:"sikulah", contohAr:"الْمَدْرَسَةُ بَيْتُ الْعِلْم", contohId:"Sekolah adalah rumah ilmu" },
+  { id:"kl22", kategori:"kearifan", emoji:"👨‍🏫", arab:"مُعَلِّم", transliterasi:"mu'allim", indonesia:"guru", rejang:"guru", contohAr:"الْمُعَلِّمُ يُعَلِّمُنَا بِحُبّ", contohId:"Guru mengajar kita dengan kasih sayang" },
+  { id:"kl23", kategori:"kearifan", emoji:"👦", arab:"تِلْمِيذ", transliterasi:"tilmiidz", indonesia:"murid", rejang:"murik", contohAr:"التِّلْمِيذُ الْمُجْتَهِدُ نَاجِح", contohId:"Murid yang rajin pasti sukses" },
+  { id:"kl24", kategori:"kearifan", emoji:"🏠", arab:"بَيْت", transliterasi:"bayt", indonesia:"rumah", rejang:"umea'", contohAr:"بَيْتِي جَنَّتِي", contohId:"Rumahku adalah surgaku" },
+  { id:"kl25", kategori:"kearifan", emoji:"🕌", arab:"مَسْجِد", transliterasi:"masjid", indonesia:"masjid", rejang:"masjid", contohAr:"نُصَلِّي فِي الْمَسْجِد", contohId:"Kita sholat di masjid" },
+  { id:"kl26", kategori:"kearifan", emoji:"🏘️", arab:"قَرْيَة", transliterasi:"qaryah", indonesia:"desa/kampung", rejang:"kampung", contohAr:"قَرْيَتُنَا هَادِئَةٌ وَجَمِيلَة", contohId:"Kampung kita tenang dan indah" },
+  { id:"kl27", kategori:"kearifan", emoji:"💊", arab:"دَوَاء", transliterasi:"dawaa'", indonesia:"obat tradisional", rejang:"ambea", contohAr:"شَرِبَ الدَّوَاءَ وَشُفِي", contohId:"Ia minum obat dan sembuh" },
+  { id:"kl28", kategori:"kearifan", emoji:"🐯", arab:"نَمِر", transliterasi:"namir", indonesia:"harimau sumatra", rejang:"imeu", contohAr:"النَّمِرُ حَيَوَانٌ قَوِيّ", contohId:"Harimau adalah hewan yang kuat" },
+  { id:"kl29", kategori:"kearifan", emoji:"🌈", arab:"قَوْسُ قُزَح", transliterasi:"qawsul quzah", indonesia:"pelangi", rejang:"gunea", contohAr:"قَوْسُ قُزَحَ جَمِيلٌ بَعْدَ الْمَطَر", contohId:"Pelangi indah setelah hujan" },
+  { id:"kl30", kategori:"kearifan", emoji:"⚡", arab:"بَرْق", transliterasi:"barq", indonesia:"petir", rejang:"semitoa", contohAr:"سَمِعْنَا الْبَرْقَ وَالرَّعْد", contohId:"Kami mendengar petir dan guntur" },
+];
+
+let activeCategory = "semua";
+let searchQuery = "";
+
+function highlight(text, query) {
+  if (!query) return text;
+  const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
+  return text.replace(regex, '<mark>$1</mark>');
+}
+
+function renderCards() {
+  const grid = document.getElementById('vocabGrid');
+  const empty = document.getElementById('emptyState');
+  const countEl = document.getElementById('resultCount');
+  const hero = document.getElementById('heroBanner');
+
+  const q = searchQuery.toLowerCase().trim();
+
+  const filtered = KOSAKATA.filter(k => {
+    const catMatch = activeCategory === 'semua' || k.kategori === activeCategory;
+    if (!catMatch) return false;
+    if (!q) return true;
+    return k.arab.includes(q) || k.transliterasi.toLowerCase().includes(q) ||
+           k.indonesia.toLowerCase().includes(q) || k.rejang.toLowerCase().includes(q);
+  });
+
+  countEl.textContent = filtered.length;
+  hero.style.display = q ? 'none' : '';
+
+  if (filtered.length === 0) {
+    grid.innerHTML = '';
+    empty.style.display = 'block';
+    return;
+  }
+
+  empty.style.display = 'none';
+
+  const catLabel = { bahasa:'Bahasa', kesenian:'Kesenian', adat:'Adat-Istiadat', kearifan:'Kearifan Lokal' };
+
+  grid.innerHTML = filtered.map(k => {
+    const hl = (t) => highlight(t, q);
+    return `
+    <div class="vocab-card ${k.kategori}">
+      <div class="card-header">
+        <span class="cat-badge ${k.kategori}">${catLabel[k.kategori]}</span>
+        <span class="card-emoji">${k.emoji}</span>
+      </div>
+      <div class="card-body">
+        <div class="arabic-word">${hl(k.arab)}</div>
+        <div class="transliteration">(${hl(k.transliterasi)})</div>
+        <div class="lang-rows">
+          <div class="lang-row">
+            <span class="lang-pill id">🇮🇩 ID</span>
+            <span class="lang-val">${hl(k.indonesia)}</span>
+          </div>
+          <div class="lang-row">
+            <span class="lang-pill rj">🏔️ RJ</span>
+            <span class="lang-val">${hl(k.rejang)}</span>
+          </div>
+        </div>
+        <div class="card-divider"></div>
+        <div class="contoh-label">✏️ Contoh Kalimat</div>
+        <div class="contoh-ar">${k.contohAr}</div>
+        <div class="contoh-id">${k.contohId}</div>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// INIT
+document.getElementById('totalKata').textContent = KOSAKATA.length;
+renderCards();
+
+// SEARCH
+const searchInput = document.getElementById('searchInput');
+const clearBtn = document.getElementById('clearBtn');
+
+searchInput.addEventListener('input', () => {
+  searchQuery = searchInput.value;
+  clearBtn.classList.toggle('show', searchQuery.length > 0);
+  renderCards();
+});
+
+clearBtn.addEventListener('click', () => {
+  searchInput.value = '';
+  searchQuery = '';
+  clearBtn.classList.remove('show');
+  searchInput.focus();
+  renderCards();
+});
+
+// TABS
+document.querySelectorAll('.cat-tab').forEach(tab => {
+  tab.addEventListener('click', () => {
+    document.querySelectorAll('.cat-tab').forEach(t => t.classList.remove('active'));
+    tab.classList.add('active');
+    activeCategory = tab.dataset.cat;
+    renderCards();
+  });
+});
+</script>
+</body>
+</html>
