@@ -574,6 +574,21 @@
 let activeCategory = "semua";
 let searchQuery = "";
 
+// Mapping kategori dari kosakata.js ke CSS class
+const katMap = {
+  'Bahasa': 'bahasa',
+  'Kesenian': 'kesenian',
+  'Adat-Istiadat': 'adat',
+  'Kearifan Lokal': 'kearifan'
+};
+
+const katEmoji = {
+  'Bahasa': '📝',
+  'Kesenian': '🎨',
+  'Adat-Istiadat': '🏮',
+  'Kearifan Lokal': '🌿'
+};
+
 function highlight(text, query) {
   if (!query) return text;
   const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi');
@@ -588,12 +603,15 @@ function renderCards() {
 
   const q = searchQuery.toLowerCase().trim();
 
-  const filtered = KOSAKATA.filter(k => {
-    const catMatch = activeCategory === 'semua' || k.kategori === activeCategory;
+  const filtered = kosakata.filter(k => {
+    const katClass = katMap[k.kat] || '';
+    const catMatch = activeCategory === 'semua' || katClass === activeCategory;
     if (!catMatch) return false;
     if (!q) return true;
-    return k.arab.includes(q) || k.transliterasi.toLowerCase().includes(q) ||
-           k.indonesia.toLowerCase().includes(q) || k.rejang.toLowerCase().includes(q);
+    return (k.arab && k.arab.includes(q)) ||
+           (k.latin && k.latin.toLowerCase().includes(q)) ||
+           (k.indo && k.indo.toLowerCase().includes(q)) ||
+           (k.rejang && k.rejang.toLowerCase().includes(q));
   });
 
   countEl.textContent = filtered.length;
@@ -607,23 +625,23 @@ function renderCards() {
 
   empty.style.display = 'none';
 
-  const catLabel = { bahasa:'Bahasa', kesenian:'Kesenian', adat:'Adat-Istiadat', kearifan:'Kearifan Lokal' };
-
   grid.innerHTML = filtered.map(k => {
-    const hl = (t) => highlight(t, q);
+    const hl = (t) => highlight(t || '', q);
+    const katClass = katMap[k.kat] || 'bahasa';
+    const emoji = katEmoji[k.kat] || '📖';
     return `
-    <div class="vocab-card ${k.kategori}">
+    <div class="vocab-card ${katClass}">
       <div class="card-header">
-        <span class="cat-badge ${k.kategori}">${catLabel[k.kategori]}</span>
-        <span class="card-emoji">${k.emoji}</span>
+        <span class="cat-badge ${katClass}">${k.kat}</span>
+        <span class="card-emoji">${emoji}</span>
       </div>
       <div class="card-body">
         <div class="arabic-word">${hl(k.arab)}</div>
-        <div class="transliteration">(${hl(k.transliterasi)})</div>
+        <div class="transliteration">(${hl(k.latin)})</div>
         <div class="lang-rows">
           <div class="lang-row">
             <span class="lang-pill id">🇮🇩 ID</span>
-            <span class="lang-val">${hl(k.indonesia)}</span>
+            <span class="lang-val">${hl(k.indo)}</span>
           </div>
           <div class="lang-row">
             <span class="lang-pill rj">🏔️ RJ</span>
@@ -632,15 +650,15 @@ function renderCards() {
         </div>
         <div class="card-divider"></div>
         <div class="contoh-label">✏️ Contoh Kalimat</div>
-        <div class="contoh-ar">${k.contohAr}</div>
-        <div class="contoh-id">${k.contohId}</div>
+        <div class="contoh-ar">${k.kalimat ? k.kalimat.arab : ''}</div>
+        <div class="contoh-id">${k.kalimat ? k.kalimat.indo : ''}</div>
       </div>
     </div>`;
   }).join('');
 }
 
 // INIT
-document.getElementById('totalKata').textContent = KOSAKATA.length;
+document.getElementById('totalKata').textContent = kosakata.length;
 renderCards();
 
 // SEARCH
