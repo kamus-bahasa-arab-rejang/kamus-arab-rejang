@@ -1,14 +1,17 @@
 :root{
-  --hijau-tua:#1f6b4a;
-  --hijau-daun:#3fae6a;
-  --biru-langit:#2f7fb8;
-  --krem:#fbf6e9;
+  --marun-tua:#7a1f1a;
+  --merah-bata:#c94a3d;
+  --emas:#c98a1c;
+  --krem:#fdf3ea;
   --coklat-teks:#3a2f22;
-  --oranye:#f2994a;
+  --oranye:#e8683a;
   --kuning:#f6c445;
-  --merah-jambu:#e8677a;
-  --garis:#e4ddc9;
-  --abu-teks:#8a8163;
+  --hijau-daun:#4a7a52;
+  --garis:#e8d9c9;
+  --abu-teks:#9a7f6a;
+
+  --hijau-tua:var(--marun-tua);
+  --biru-langit:var(--merah-bata);
 }
 
 *{box-sizing:border-box;}
@@ -16,24 +19,45 @@
 body{
   margin:0;
   font-family:'Segoe UI', 'Trebuchet MS', sans-serif;
-  background:var(--krem);
   color:var(--coklat-teks);
+  background-color:var(--krem);
+  position:relative;
+  min-height:100vh;
+}
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:url("assets/images/latar-budaya.jpg");
+  background-size:cover;
+  background-position:top center;
+  background-repeat:no-repeat;
+  opacity:0.16;
+  z-index:0;
+  pointer-events:none;
+}
+.krj-header, .krj-main, .krj-footer{
+  position:relative;
+  z-index:1;
 }
 
 /* ---------- HEADER ---------- */
 .krj-header{
-  background:linear-gradient(120deg,var(--hijau-tua),var(--biru-langit));
+  position:relative;
+  background-image:
+    linear-gradient(rgba(80,15,12,0.72), rgba(80,15,12,0.72)),
+    url("assets/images/batik-besurek.png");
+  background-size:cover;
+  background-position:center;
   padding:20px 24px;
   color:white;
+  overflow:hidden;
 }
-.krj-header-inner{max-width:1000px;margin:0 auto;}
+.krj-header-inner{
+  max-width:1000px;margin:0 auto;
+  position:relative;z-index:1;
+}
 .krj-brand{display:flex;align-items:center;gap:14px;}
-.krj-logo{
-  width:44px;height:44px;border-radius:13px;
-  background:var(--oranye);
-  display:flex;align-items:center;justify-content:center;
-  font-size:20px;flex-shrink:0;
-}
 .krj-title{font-size:18px;font-weight:800;}
 .krj-subtitle{font-size:11px;opacity:0.9;letter-spacing:0.03em;}
 
@@ -94,10 +118,10 @@ body{
   content:"";position:absolute;right:-18px;bottom:-18px;
   width:70px;height:70px;border-radius:50%;background:rgba(255,255,255,0.12);
 }
-.cat-bahasa{background:linear-gradient(135deg,var(--biru-langit),#245e8c);}
-.cat-kesenian{background:linear-gradient(135deg,var(--merah-jambu),#c94a5f);}
-.cat-adat-istiadat{background:linear-gradient(135deg,var(--oranye),#c96f22);}
-.cat-kearifan-lokal{background:linear-gradient(135deg,var(--hijau-daun),#268049);}
+.cat-bahasa{background:linear-gradient(135deg,var(--merah-bata),#a3382d);}
+.cat-kesenian{background:linear-gradient(135deg,var(--oranye),#c2531f);}
+.cat-adat-istiadat{background:linear-gradient(135deg,var(--marun-tua),#5c1410);}
+.cat-kearifan-lokal{background:linear-gradient(135deg,var(--hijau-daun),#375f3d);}
 
 /* ---------- RESULTS ---------- */
 .krj-results-top{
@@ -133,22 +157,35 @@ body{
 }
 
 .krj-vcard-body{padding:16px 16px 18px;}
-.krj-arab{font-size:28px;color:var(--hijau-tua);font-weight:700;text-align:right;direction:rtl;margin-bottom:8px;}
 
-.krj-lang-row{display:flex;gap:8px;margin-bottom:12px;flex-wrap:wrap;}
-.krj-tag{font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:8px;}
-.tag-rj{background:#dcf3e2;color:var(--hijau-tua);}
-.tag-id{background:#fdecd2;color:#a56a1c;}
+.krj-word-row{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:8px;gap:10px;}
+.krj-word-lang{padding-top:4px;}
+.krj-word-arab-block{text-align:right;flex-shrink:0;}
+.krj-arab{font-size:26px;color:var(--marun-tua);font-weight:700;direction:rtl;line-height:1.2;}
+.krj-word-translit{font-size:11.5px;color:var(--abu-teks);font-style:italic;margin-top:2px;}
+
+.krj-lang-line{display:flex;align-items:center;gap:7px;margin-bottom:6px;font-size:13px;}
+.krj-lang-line-right{justify-content:flex-end;}
+.krj-lang-code{
+  font-size:9.5px;font-weight:800;color:#fff;padding:2px 7px;border-radius:5px;
+  flex-shrink:0;min-width:20px;text-align:center;
+}
+.krj-lang-code.ar{background:var(--marun-tua);}
+.krj-lang-code.id{background:var(--oranye);}
+.krj-lang-code.rj{background:var(--hijau-daun);}
 
 .krj-contoh-label,.krj-budaya-label{
   font-size:10.5px;font-weight:800;color:var(--abu-teks);letter-spacing:0.05em;
-  margin:10px 0 6px;text-transform:uppercase;
+  margin:12px 0 8px;text-transform:uppercase;
 }
-.krj-contoh-arab{font-size:16px;direction:rtl;text-align:right;margin-bottom:4px;line-height:1.6;}
-.krj-contoh-id{font-size:13px;color:#5b5341;}
+
+.krj-kalimat-line{display:flex;align-items:flex-start;gap:7px;margin-bottom:7px;}
+.krj-kalimat-txt{flex:1;font-size:13px;line-height:1.5;color:#5b5341;}
+.krj-contoh-arab{font-size:16px;direction:rtl;text-align:right;line-height:1.6;color:var(--coklat-teks);}
+.krj-contoh-translit{font-size:11.5px;color:var(--abu-teks);font-style:italic;text-align:right;margin-top:2px;}
 
 .krj-budaya-box{
-  margin-top:12px;background:var(--krem);border-left:4px solid var(--oranye);
+  margin-top:4px;background:var(--krem);border-left:4px solid var(--emas);
   border-radius:8px;padding:10px 12px;font-size:12.5px;color:#6b5c3f;line-height:1.5;
 }
 
@@ -167,3 +204,37 @@ body{
 .krj-footer{
   text-align:center;padding:20px;font-size:12px;color:var(--abu-teks);
 }
+.krj-footer-credit{
+  margin-top:6px;font-size:10.5px;color:var(--abu-teks);opacity:0.55;
+}
+
+/* ---------- KOTAK SARAN (kecil, mengambang pojok kanan bawah) ---------- */
+.krj-saran-box{
+  position:fixed;
+  right:18px;bottom:18px;
+  width:220px;
+  background:#fff;border:2px dashed var(--emas);border-radius:14px;
+  padding:14px 16px;text-align:left;
+  box-shadow:0 6px 20px rgba(0,0,0,0.12);
+  z-index:10;
+}
+.krj-saran-title{
+  font-size:12.5px;font-weight:800;color:var(--marun-tua);margin-bottom:5px;line-height:1.3;
+}
+.krj-saran-desc{
+  font-size:10.5px;color:var(--abu-teks);line-height:1.5;
+  margin:0 0 10px;
+}
+.krj-saran-btn{
+  display:block;text-align:center;background:var(--emas);color:#fff;
+  font-size:11.5px;font-weight:700;padding:8px 14px;border-radius:20px;
+  text-decoration:none;
+}
+.krj-saran-btn:hover{background:#a3720f;}
+
+@media(max-width:640px){
+  .krj-saran-box{
+    position:static;width:auto;margin:24px 20px 0;
+  }
+}
+.krj-saran-btn:hover{background:#a3720f;}
