@@ -2,10 +2,10 @@
 // KONFIGURASI
 // ============================================================
 const KATEGORI_LIST = [
-  { nama: "Bahasa", ikon: "📝", kelas: "cat-bahasa" },
-  { nama: "Kesenian", ikon: "🎨", kelas: "cat-kesenian" },
-  { nama: "Adat-Istiadat", ikon: "🏮", kelas: "cat-adat-istiadat" },
-  { nama: "Kearifan Lokal", ikon: "🌿", kelas: "cat-kearifan-lokal" }
+  { nama: "Bahasa", kelas: "cat-bahasa" },
+  { nama: "Kesenian", kelas: "cat-kesenian" },
+  { nama: "Adat-Istiadat", kelas: "cat-adat-istiadat" },
+  { nama: "Kearifan Lokal", kelas: "cat-kearifan-lokal" }
 ];
 
 const JUMLAH_PER_HALAMAN = 8;   // batasi kartu yang dirender sekaligus
@@ -43,7 +43,6 @@ function renderKategori() {
     const jumlah = dataKosakata.filter(d => d.kat === k.nama).length;
     return `
       <button class="krj-cat-card ${k.kelas}" data-kategori="${k.nama}">
-        <span class="ikon">${k.ikon}</span>
         <span class="nama">${k.nama}</span>
         <span class="jumlah">${jumlah} kosakata</span>
       </button>
@@ -138,6 +137,7 @@ el.loadMoreBtn.addEventListener("click", renderTambahanKartu);
 // ============================================================
 function buatKartuHTML(item) {
   const gambarSrc = item.gambar && item.gambar.trim() !== "" ? item.gambar : GAMBAR_FALLBACK;
+  const adaKalimatRejang = item.kalimat && item.kalimat.rejang && item.kalimat.rejang.trim() !== "";
 
   return `
     <div class="krj-vcard">
@@ -147,20 +147,45 @@ function buatKartuHTML(item) {
              onerror="this.onerror=null; this.src='${GAMBAR_FALLBACK}';">
       </div>
       <div class="krj-vcard-body">
-        <div class="krj-arab">${item.arab}</div>
-        <div class="krj-lang-row">
-          <span class="krj-tag tag-id">🇮🇩 ${item.indo}</span>
-          <span class="krj-tag tag-rj">🏔️ ${item.rejang}</span>
+
+        <div class="krj-word-row">
+          <div class="krj-word-lang">
+            <div class="krj-lang-line"><span class="krj-lang-code id">ID</span> ${item.indo}</div>
+            <div class="krj-lang-line"><span class="krj-lang-code rj">RJ</span> ${item.rejang}</div>
+          </div>
+          <div class="krj-word-arab-block">
+            <div class="krj-lang-line krj-lang-line-right"><span class="krj-lang-code ar">AR</span></div>
+            <div class="krj-arab">${item.arab}</div>
+            ${item.latin ? `<div class="krj-word-translit">${item.latin}</div>` : ""}
+          </div>
         </div>
 
         ${item.kalimat ? `
-        <div class="krj-contoh-label">Contoh kalimat</div>
-        <div class="krj-contoh-arab">${item.kalimat.arab}</div>
-        <div class="krj-contoh-id">${item.kalimat.indo}</div>
+        <div class="krj-contoh-label">Contoh Kalimat</div>
+
+        <div class="krj-kalimat-line">
+          <span class="krj-lang-code ar">AR</span>
+          <div class="krj-kalimat-txt">
+            <div class="krj-contoh-arab">${item.kalimat.arab}</div>
+            ${item.kalimat.latin ? `<div class="krj-contoh-translit">${item.kalimat.latin}</div>` : ""}
+          </div>
+        </div>
+
+        ${adaKalimatRejang ? `
+        <div class="krj-kalimat-line">
+          <span class="krj-lang-code rj">RJ</span>
+          <div class="krj-kalimat-txt">${item.kalimat.rejang}</div>
+        </div>
+        ` : ""}
+
+        <div class="krj-kalimat-line">
+          <span class="krj-lang-code id">ID</span>
+          <div class="krj-kalimat-txt">${item.kalimat.indo}</div>
+        </div>
         ` : ""}
 
         ${item.budaya ? `
-        <div class="krj-budaya-label">💡 Tahukah kamu?</div>
+        <div class="krj-budaya-label">Tahukah Kamu?</div>
         <div class="krj-budaya-box">${item.budaya}</div>
         ` : ""}
       </div>
